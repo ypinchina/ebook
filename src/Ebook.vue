@@ -1,29 +1,33 @@
 <!-- 组件说明 -->
 <template>
   <div class='ebook'>
+    <title-bar :isShowTitleAndMenu='isShowTitleAndMenu'></title-bar>
     <div class="read-wrapper">
       <div id="read">
       </div>
       <div class="mask">
         <div class="left" @click='prev'></div>
-        <div class="center"></div>
+        <div class="center" @click='toggleTitleAndMenu'></div>
         <div class="right" @click='next'></div>
       </div>
     </div>
+    <menu-bar :isShowTitleAndMenu='isShowTitleAndMenu'></menu-bar>
   </div>
 </template>
 
 <script>
+import titleBar from './components/titleBar'
+import menuBar from './components/menuBar'
 import Epub from 'epubjs'
 const DOWNLOAD_URL = '/2018_Book_AgileProcessesInSoftwareEngine.epub'
 global.ePub = Epub
 export default {
   components: {
-
+    titleBar, menuBar
   },
   data () {
     return {
-
+      isShowTitleAndMenu: false
     }
   },
   computed: {
@@ -49,6 +53,9 @@ export default {
       if (this.rendition) {
         this.rendition.next()
       }
+    },
+    toggleTitleAndMenu () {
+      this.isShowTitleAndMenu = !this.isShowTitleAndMenu
     }
   },
   mounted () {

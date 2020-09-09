@@ -4,6 +4,21 @@ px2rem($px){
 }
 center() {
   display flex
-  justify-items center
+  align-items center
   justify-content center
 }
+.icon
+  font-family "iconfont" !important
+  font-size px2rem(40)
+  font-style normal
+  -webkit-font-smoothing antialiased
+  -moz-osx-font-smoothing grayscale
+  color #333
+.slide-down-enter,.slide-down-leave-to
+  transform translate3d(0, -100%, 0)
+.slide-up-enter,.slide-down-leave,.slide-up-leave-to
+  transform translate3d(0, 100%, 0)
+.slide-down-enter-active,.slide-up-enter-active,.slide-down-leave-active,.slide-up-leave-active
+  transition all 0.5s linear
+.slide-down-enter-to,.slide-up-enter-to
+  transform translate3d(0, 0, 0)
