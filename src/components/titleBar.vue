@@ -49,7 +49,7 @@ export default {
 @import '../stylus/global.styl'
   .title-wrapper
     width 100%
-    height 40px
+    height px2rem(120)
     position absolute
     left 0
     top 0
@@ -66,6 +66,6 @@ export default {
       display flex
       justify-content flex-end
       .icon-wrapper
-        flex 0 0 px2rem(60)
+        flex 0 0 px2rem(100)
         center()
 </style>

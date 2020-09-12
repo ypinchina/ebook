@@ -1,7 +1,7 @@
 <!-- 组件说明 -->
 <template>
   <div class='ebook'>
-    <title-bar :isShowTitleAndMenu='isShowTitleAndMenu'></title-bar>
+    <title-bar :isShowTitleAndMenu='isShowTitleAndMenu' ></title-bar>
     <div class="read-wrapper">
       <div id="read">
       </div>
@@ -11,7 +11,14 @@
         <div class="right" @click='next'></div>
       </div>
     </div>
-    <menu-bar :isShowTitleAndMenu='isShowTitleAndMenu'></menu-bar>
+    <menu-bar :isShowTitleAndMenu='isShowTitleAndMenu'
+    ref='$menuBar'
+    :fontSizeList='fontSizeList'
+    :defaultFontSize='defaultFontSize'
+    @setFontSize='setFontSize'
+    :themesList='themesList'
+    @setThemes='setThemes'>
+    </menu-bar>
   </div>
 </template>
 
@@ -27,7 +34,59 @@ export default {
   },
   data () {
     return {
-      isShowTitleAndMenu: false
+      isShowTitleAndMenu: false,
+      fontSizeList: [{
+        fontSize: 12
+      }, {
+        fontSize: 14
+      }, {
+        fontSize: 16
+      }, {
+        fontSize: 18
+      }, {
+        fontSize: 20
+      }, {
+        fontSize: 22
+      }, {
+        fontSize: 24
+      }, {
+        fontSize: 26
+      }],
+      defaultFontSize: 16,
+      themesList: [{
+        name: 'default',
+        style: {
+          body: {
+            color: '#000',
+            background: '#fff'
+          }
+        }
+      }, {
+        name: 'eye',
+        style: {
+          body: {
+            color: '#000',
+            background: '#cce8cf'
+          }
+        }
+      }, {
+        name: 'night',
+        body: {
+          style: {
+            color: '#fff',
+            background: '#666'
+          }
+        }
+      }, {
+        name: 'gold',
+        body: {
+          style: {
+            color: '#000',
+            background: '#d68618'
+          }
+        }
+      }],
+      defaultThemes: 0
     }
   },
   computed: {
@@ -43,6 +102,12 @@ export default {
         height: window.innerHeight
       })
       this.rendition.display()
+      // 保存主题
+      this.themes = this.rendition.themes
+      // 设置默认字体
+      this.themes.fontSize(this.defaultFontSize)
+      // 注册主题
+      this.registerThemes()
     },
     prev () {
       if (this.rendition) {
@@ -56,6 +121,26 @@ export default {
     },
     toggleTitleAndMenu () {
       this.isShowTitleAndMenu = !this.isShowTitleAndMenu
+      if (!this.isShowTitleAndMenu) {
+        this.$refs.$menuBar.hideFontSize()
+      }
+    },
+    setFontSize (fontSize) {
+      this.defaultFontSize = fontSize
+      if (this.themes) {
+        this.themes.fontSize(fontSize + 'px')
+      }
+    },
+    registerThemes () {
+      this.themesList.forEach(themes => {
+        this.themes.register(themes.name, themes.style)
+      })
+      this.themes.select(this.themesList[this.defaultThemes].name)
+    },
+    setThemes (index) {
+      if (this.themes) {
+        this.themes.select(this.themesList[index].name)
+      }
     }
   },
   mounted () {
