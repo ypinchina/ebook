@@ -28,9 +28,13 @@
           </div>
           <div class="preview" :style="{fontSize: fontSizeList[fontSizeList.length - 1].fontSize + 'px'}">A</div>
         </div>
-        <div class="setThemes-wrapper" v-else-if="showTag === 1" v-for='(item, index) in themesList' :key='index' @click='selectThemes(index)'>
-          <div class="preview"></div>
-          <div class="text">{{item.name}}</div>
+        <div class="setThemes-wrapper" v-else-if="showTag === 1">
+          <div class="themesItem" v-for='(item, index) in themesList' :key='index' @click='selectThemes(index)'>
+            <div class="preview" :style="{background: item.style.body.background}"
+            :class="{'no-border': index !== 0}"
+            ></div>
+            <div class="text" :class="{'activeThemes': index === defaultThemes}">{{item.name}}</div>
+          </div>
         </div>
       </div>
     </transition>
@@ -49,7 +53,8 @@ export default {
     },
     fontSizeList: Array,
     defaultFontSize: Number,
-    themesList: Array
+    themesList: Array,
+    defaultThemes: Number
   },
   data () {
     return {
@@ -69,6 +74,9 @@ export default {
     },
     setFontSize (fontSize) {
       this.$emit('setFontSize', fontSize)
+    },
+    selectThemes (index) {
+      this.$emit('setThemes', index)
     }
   }
 }
@@ -89,8 +97,27 @@ export default {
     .setThemes-wrapper
       display flex
       height 100%
-      .preview
+      .themesItem
+        display flex
         flex 1
+        flex-direction column
+        center()
+        height 100%
+        box-sizing border-box
+        padding px2rem(10)
+        .preview
+          flex 1
+          width 100%
+          height px2rem(40)
+          border 1px #666 solid
+          &.no-border
+            border none
+        .text
+          flex 1
+          font-size px2rem(20)
+          color #ccc
+          &.activeThemes
+            color #000
     .font-size-wrapper
       display flex
       height 100%

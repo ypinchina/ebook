@@ -17,7 +17,9 @@
     :defaultFontSize='defaultFontSize'
     @setFontSize='setFontSize'
     :themesList='themesList'
-    @setThemes='setThemes'>
+    @setThemes='setThemes'
+    :defaultThemes='defaultThemes'
+    >
     </menu-bar>
   </div>
 </template>
@@ -71,18 +73,18 @@ export default {
         }
       }, {
         name: 'night',
-        body: {
-          style: {
+        style: {
+          body: {
             color: '#fff',
             background: '#666'
           }
         }
       }, {
         name: 'gold',
-        body: {
-          style: {
+        style: {
+          body: {
             color: '#000',
-            background: '#d68618'
+            background: '#f2ede3'
           }
         }
       }],
@@ -135,12 +137,12 @@ export default {
       this.themesList.forEach(themes => {
         this.themes.register(themes.name, themes.style)
       })
-      this.themes.select(this.themesList[this.defaultThemes].name)
+      this.setThemes(this.defaultThemes)
     },
     setThemes (index) {
-      if (this.themes) {
-        this.themes.select(this.themesList[index].name)
-      }
+      this.defaultThemes = index
+      this.themes.select(this.themesList[index].name)
+      console.log(this.themesList[index].name)
     }
   },
   mounted () {

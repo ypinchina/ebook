@@ -16,4 +16,5 @@ window.addEventListener('DOMContentLoaded', () => {
 </script>
 
 <style lang='stylus' scoped>
+#app{overflow:hidden}
 </style>
