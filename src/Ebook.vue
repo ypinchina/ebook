@@ -19,6 +19,11 @@
     :themesList='themesList'
     @setThemes='setThemes'
     :defaultThemes='defaultThemes'
+    :bookAvailable='bookAvailable'
+    @setProgress='setProgress'
+    @hideShowTitleAndMenu='hideShowTitleAndMenu'
+    @toJump='toJump'
+    :navigation='navigation'
     >
     </menu-bar>
   </div>
@@ -88,7 +93,9 @@ export default {
           }
         }
       }],
-      defaultThemes: 0
+      defaultThemes: 0,
+      bookAvailable: false,
+      navigation: {}
     }
   },
   computed: {
@@ -110,6 +117,16 @@ export default {
       this.themes.fontSize(this.defaultFontSize)
       // 注册主题
       this.registerThemes()
+      // 读取location对象
+      this.book.ready.then(() => {
+        this.navigation = this.book.navigation
+        console.log(this.navigation)
+        // this.navigation.toc.label 章节标题 .href跳转链接
+        return this.book.locations.generate()
+      }).then(() => {
+        this.locations = this.book.locations
+        this.bookAvailable = true
+      })
     },
     prev () {
       if (this.rendition) {
@@ -142,7 +159,18 @@ export default {
     setThemes (index) {
       this.defaultThemes = index
       this.themes.select(this.themesList[index].name)
-      console.log(this.themesList[index].name)
+    },
+    setProgress (progress) {
+      const percentage = progress / 100
+      const location = progress > 0 ? this.locations.cfiFromPercentage(percentage) : 0
+      this.rendition.display(location)
+    },
+    hideShowTitleAndMenu () {
+      this.isShowTitleAndMenu = false
+    },
+    toJump (href) {
+      this.rendition.display(href)
+      this.isShowTitleAndMenu = false
     }
   },
   mounted () {
