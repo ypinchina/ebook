@@ -3,10 +3,10 @@
   <div class='catalog-wrapper'>
     <div class="wrapper" v-if="bookAvailable === true">
       <div class="catalog-item" v-for='(item, index) in navigation.toc' :key='index' @click='select(item)'>
-        <div >{{item.label}}</div>
+        <div>{{item.label}}</div>
       </div>
     </div>
-    <div v-else-if='bookAvailable === false'>加载中</div>
+    <div v-else-if='bookAvailable === false' class="loading">加载中...</div>
   </div>
 </template>
 
@@ -42,6 +42,10 @@ export default {
   z-index 102
   width 50%
   background-color #fff
+  .loading
+    width 100%
+    height 100%
+    center()
   .wrapper
     .catalog-item
       box-sizing border-box

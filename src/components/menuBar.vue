@@ -49,6 +49,7 @@
             <input type="range"
             max="100" min="0"
             step="0"
+            :style="{backgroundSize: calcBackground}"
             @input='progressInput($event.target.value)'
             @change="setProgress($event.target.value)"
             :value="progress"
@@ -81,7 +82,8 @@ export default {
     themesList: Array,
     defaultThemes: Number,
     bookAvailable: Boolean,
-    navigation: Object
+    navigation: Object,
+    parentProgress: Number
   },
   data () {
     return {
@@ -91,7 +93,23 @@ export default {
       ifShowContent: false
     }
   },
+  watch: {
+    bookAvailable: {
+      handler () {
+        this.$emit('setCurrentProgress')
+      }
+    },
+    parentProgress: {
+      handler (val, oldVal) {
+        this.progress = val
+      },
+      deep: true
+    }
+  },
   computed: {
+    calcBackground () {
+      return `${this.progress}% 100%`
+    }
   },
   methods: {
     hideShowTitleAndMenu () {

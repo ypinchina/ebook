@@ -24,6 +24,8 @@
     @hideShowTitleAndMenu='hideShowTitleAndMenu'
     @toJump='toJump'
     :navigation='navigation'
+    :parentProgress='progress'
+    @setCurrentProgress='setCurrentProgress'
     >
     </menu-bar>
   </div>
@@ -95,7 +97,8 @@ export default {
       }],
       defaultThemes: 0,
       bookAvailable: false,
-      navigation: {}
+      navigation: {},
+      progress: 0
     }
   },
   computed: {
@@ -120,7 +123,6 @@ export default {
       // 读取location对象
       this.book.ready.then(() => {
         this.navigation = this.book.navigation
-        console.log(this.navigation)
         // this.navigation.toc.label 章节标题 .href跳转链接
         return this.book.locations.generate()
       }).then(() => {
@@ -130,13 +132,23 @@ export default {
     },
     prev () {
       if (this.rendition) {
-        this.rendition.prev()
+        this.rendition.prev().then(() => {
+          const currentLocation = this.rendition.currentLocation()
+          this.progress = this.bookAvailable ? Math.round(this.locations.percentageFromCfi(currentLocation.start.cfi) * 100) : 0
+        })
       }
     },
     next () {
       if (this.rendition) {
-        this.rendition.next()
+        this.rendition.next().then(() => {
+          const currentLocation = this.rendition.currentLocation()
+          this.progress = this.bookAvailable ? Math.round(this.locations.percentageFromCfi(currentLocation.start.cfi) * 100) : 0
+        })
       }
+    },
+    setCurrentProgress () {
+      const currentLocation = this.rendition.currentLocation()
+      this.progress = Math.round(this.locations.percentageFromCfi(currentLocation.start.cfi) * 100)
     },
     toggleTitleAndMenu () {
       this.isShowTitleAndMenu = !this.isShowTitleAndMenu
@@ -169,7 +181,9 @@ export default {
       this.isShowTitleAndMenu = false
     },
     toJump (href) {
-      this.rendition.display(href)
+      this.rendition.display(href).then(() => {
+        this.setCurrentProgress()
+      })
       this.isShowTitleAndMenu = false
     }
   },
